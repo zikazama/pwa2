@@ -1,6 +1,7 @@
 // REGISTER SERVICE WORKER
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", function () {
+    requestPermission();
     navigator.serviceWorker
       .register("/service-worker.js")
       .then(function () {
