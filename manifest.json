@@ -1,7 +1,7 @@
 {
-    "name": "My First PWA",
-    "short_name": "My PWA",
-    "description": "Aplikasi PWA pertama saya",
+    "name": "Mantap Bola",
+    "short_name": "MB",
+    "description": "Aplikasi Mantap Bola",
     "start_url": "/index.html",
     "display": "standalone",
     "background_color": "#00897B",
@@ -18,5 +18,6 @@
             "type": "image/png",
             "purpose": "any maskable"
         }
-    ]
+    ],
+    "gcm_sender_id": "750193281848"
 }
