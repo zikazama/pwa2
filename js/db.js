@@ -1,8 +1,8 @@
 var dbPromised = idb.open("mantap-bola", 1, function (upgradeDb) {
   var articlesObjectStore = upgradeDb.createObjectStore("matches", {
-    keyPath: "ID",
+    keyPath: "id",
   });
-  articlesObjectStore.createIndex("group", "group", {
+  articlesObjectStore.createIndex("post_index", "post_index", {
     unique: false,
   });
 });
@@ -22,18 +22,32 @@ function getAll() {
 }
 
 function getById(id) {
-    return new Promise(function(resolve, reject) {
-      dbPromised
-        .then(function(db) {
-          var tx = db.transaction("matches", "readonly");
-          var store = tx.objectStore("matches");
-          return store.get(id);
-        })
-        .then(function(match) {
-          resolve(match);
-        });
-    });
-  }
+  return new Promise(function (resolve, reject) {
+    dbPromised
+      .then(function (db) {
+        var tx = db.transaction("matches", "readonly");
+        var store = tx.objectStore("matches");
+        return store.get(id);
+      })
+      .then(function (match) {
+        resolve(match);
+      });
+  });
+}
+
+function deleteById(id) {
+  return new Promise(function (resolve, reject) {
+    dbPromised
+      .then(function (db) {
+        var tx = db.transaction("matches", "readwrite");
+        var store = tx.objectStore("matches");
+        return store.delete(id);
+      })
+      .then(function (match) {
+        resolve(match);
+      });
+  });
+}
 
 function saveForLater(match) {
   dbPromised

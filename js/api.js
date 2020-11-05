@@ -25,6 +25,14 @@ function getMatches() {
           response.json().then(function (hasil) {
             var card = "";
             hasil.matches.forEach(function (match) {
+              const check_saved = getById(match.id);
+              var status_saved;;
+              check_saved.then(function(saveMatch){
+                if(saveMatch !== undefined){
+                  status_saved = true;
+                  
+                }
+              });
               card += `
               <div class="row">
           <div class="col s12 m12">
@@ -50,9 +58,7 @@ function getMatches() {
               </div>
               <br><br>
               <div class="card-action right-align">
-                <a class="yellow-text" href="./match.html?id=${
-                  match.id
-                }&saved=true">Detail</a>
+                <a class="yellow-text" href="./match.html?${status_saved === true ? 'id=' + match.id + '&saved=true' : 'id=' + match.id}">Detail</a>
               </div>
             </div>
           </div>
@@ -61,7 +67,7 @@ function getMatches() {
 
               //console.log(match);
             });
-            document.getElementById("home").innerHTML = card;
+            //document.getElementById("home").innerHTML = card;
           });
         }
       });
@@ -75,6 +81,13 @@ function getMatches() {
     data.json().then(function (hasil) {
       var card = "";
       hasil.matches.forEach(function (match) {
+        const check_saved = getById(match.id);
+        var status_saved;
+        check_saved.then(function(saveMatch){
+          if(saveMatch !== undefined){
+            status_saved = true;
+          }
+        });
         card += `
         <div class="row">
     <div class="col s12 m12">
@@ -100,7 +113,7 @@ function getMatches() {
         </div>
         <br><br>
         <div class="card-action right-align">
-          <a class="yellow-text" href="./match.html?id=${match.id}&saved=true">Detail</a>
+          <a class="yellow-text" href="./match.html?${status_saved === true ? 'id=' + match.id + '&saved=true' : 'id=' + match.id}">Detail</a>
         </div>
       </div>
     </div>
@@ -129,7 +142,7 @@ function getMatchById() {
                 return match.id === parseInt(idParam);
               });
               detailMatch = detailMatch[0];
-              console.log(detailMatch);
+              //console.log(detailMatch);
               resolve(detailMatch);
               document.getElementById("body-content").innerHTML = `
               <div class="row">
@@ -231,7 +244,7 @@ function getMatchById() {
 
 function getSavedMatches() {
   getAll().then(function(matches) {
-    console.log(matches);
+    //console.log(matches);
     // Menyusun komponen card artikel secara dinamis
     var matchesHTML = "";
     matches.forEach(function(match) {
@@ -264,6 +277,7 @@ function getSavedMatches() {
             <a class="yellow-text" href="./match.html?id=${
               match.id
             }&saved=true">Detail</a>
+            <a href="#" onClick="deleteMatchById(${match.id})" class="hapus red-text white">Hapus</a>
           </div>
         </div>
       </div>
@@ -273,6 +287,12 @@ function getSavedMatches() {
     // Sisipkan komponen card ke dalam elemen dengan id #body-content
     document.getElementById("body-content").innerHTML = matchesHTML;
   });
+}
+
+function deleteMatchById(id){
+  deleteById(id);
+  M.toast({html:'Pertandingan Dihapus'});
+  getSavedMatches();
 }
 
 function getSavedMatchById() {
