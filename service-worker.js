@@ -24,6 +24,7 @@ const urlsToCache = [
   "/manifest.json",
   "/push.js",
   "https://fonts.googleapis.com/icon?family=Material+Icons",
+  "https://fonts.gstatic.com/s/materialicons/v67/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2"
 ];
 
 self.addEventListener("install", (event) => {

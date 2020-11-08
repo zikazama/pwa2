@@ -67,7 +67,7 @@ function getMatches() {
 
               //console.log(match);
             });
-            //document.getElementById("home").innerHTML = card;
+            document.getElementById("home").innerHTML = card;
           });
         }
       });
@@ -142,12 +142,12 @@ function getMatchById() {
                 return match.id === parseInt(idParam);
               });
               detailMatch = detailMatch[0];
-              //console.log(detailMatch);
+              console.log(detailMatch);
               resolve(detailMatch);
               document.getElementById("body-content").innerHTML = `
               <div class="row">
               <div class="col s12 m12">
-                <div class="card grey darken-1 large">
+                <div class="card grey darken-1 extra-large">
                   <div class="card-content white-text">
                     <span class="card-title center-align">${
                       detailMatch.group !== null
@@ -170,6 +170,11 @@ function getMatchById() {
                     }</h6></div>
                   </div>
                   <hr>
+                   <h4 class="col-12 white-text center-align">Durasi         : ${detailMatch.score.duration} </h4>
+                  <h4 class="col-12 white-text center-align">Half-time      : ${detailMatch.score.halfTime.homeTeam !== null ? detailMatch.score.halfTime.homeTeam+' - '+detailMatch.score.halfTime.awayTeam : ' - '} </h4>
+                  <h4 class="col-12 white-text center-align">Full-time      : ${detailMatch.score.fullTime.homeTeam !== null ? detailMatch.score.fullTime.homeTeam+' - '+detailMatch.score.fullTime.awayTeam : ' - '} </h4>
+                  <h4 class="col-12 white-text center-align">Extra-time     : ${detailMatch.score.extraTime.homeTeam !== null ? detailMatch.score.extraTime.homeTeam+' - '+detailMatch.score.extraTime.awayTeam : ' Tidak Ada '} </h4>
+                  <h4 class="col-12 white-text center-align">Penalties      : ${detailMatch.score.penalties.homeTeam !== null ? detailMatch.score.penalties.homeTeam+' - '+detailMatch.score.penalties.awayTeam : ' Tidak Ada '} </h4>
                   <div class="card-action">
                     <a class="yellow-text" href="./index.html">Kembali</a>
                   </div>
