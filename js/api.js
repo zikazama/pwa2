@@ -17,61 +17,6 @@ function error(error) {
 }
 
 function getMatches() {
-  if ("caches" in window) {
-    caches
-      .match(base_url + "v2/competitions/2001/matches")
-      .then(function (response) {
-        if (response) {
-          response.json().then(function (hasil) {
-            var card = "";
-            hasil.matches.forEach(function (match) {
-              const check_saved = getById(match.id);
-              var status_saved;;
-              check_saved.then(function(saveMatch){
-                if(saveMatch !== undefined){
-                  status_saved = true;
-                  
-                }
-              });
-              card += `
-              <div class="row">
-          <div class="col s12 m12">
-            <div class="card grey darken-1">
-              <div class="card-content white-text">
-                <span class="card-title center-align">${
-                  match.group !== null ? match.group : "Non Group"
-                }</span>
-      
-                <div class="col s4 m4 center-align"><h6>${
-                  match.homeTeam.name
-                }</h6></div>
-                <div class="col s4 m4 center-align"><h4>${
-                  match.score.fullTime.homeTeam === null
-                    ? "-"
-                    : match.score.fullTime.homeTeam +
-                      " - " +
-                      match.score.fullTime.awayTeam
-                }</h4></div>
-                <div class="col s4 m4 center-align"><h6>${
-                  match.awayTeam.name
-                }</h6></div>
-              </div>
-              <br><br>
-              <div class="card-action right-align">
-                <a class="yellow-text" href="./match.html?${status_saved === true ? 'id=' + match.id + '&saved=true' : 'id=' + match.id}">Detail</a>
-              </div>
-            </div>
-          </div>
-        </div>
-              `;
-
-              //console.log(match);
-            });
-            document.getElementById("home").innerHTML = card;
-          });
-        }
-      });
-  }
   fetch(base_url + "v2/competitions/2001/matches", {
     method: "GET",
     headers: {
@@ -131,63 +76,6 @@ function getMatchById() {
   return new Promise(function (resolve, reject) {
     var urlParams = new URLSearchParams(window.location.search);
     var idParam = urlParams.get("id");
-    if ("caches" in window) {
-      caches
-        .match(base_url + "v2/competitions/2001/matches")
-        .then(function (response) {
-          if (response) {
-            response.json().then(function (hasil) {
-              var card = "";
-              detailMatch = hasil.matches.filter(function (match) {
-                return match.id === parseInt(idParam);
-              });
-              detailMatch = detailMatch[0];
-              console.log(detailMatch);
-              resolve(detailMatch);
-              document.getElementById("body-content").innerHTML = `
-              <div class="row">
-              <div class="col s12 m12">
-                <div class="card grey darken-1 extra-large">
-                  <div class="card-content white-text">
-                    <span class="card-title center-align">${
-                      detailMatch.group !== null
-                        ? detailMatch.group
-                        : "Non Group"
-                    }</span>
-          
-                    <div class="col s4 m4 center-align"><h6>${
-                      detailMatch.homeTeam.name
-                    }</h6></div>
-                    <div class="col s4 m4 center-align"><h4>${
-                      detailMatch.score.fullTime.homeTeam === null
-                        ? "-"
-                        : detailMatch.score.fullTime.homeTeam +
-                          " - " +
-                          detailMatch.score.fullTime.awayTeam
-                    }</h4></div>
-                    <div class="col s4 m4 center-align"><h6>${
-                      detailMatch.awayTeam.name
-                    }</h6></div>
-                  </div>
-                  <hr>
-                   <h4 class="col-12 white-text center-align">Durasi         : ${detailMatch.score.duration} </h4>
-                  <h4 class="col-12 white-text center-align">Half-time      : ${detailMatch.score.halfTime.homeTeam !== null ? detailMatch.score.halfTime.homeTeam+' - '+detailMatch.score.halfTime.awayTeam : ' - '} </h4>
-                  <h4 class="col-12 white-text center-align">Full-time      : ${detailMatch.score.fullTime.homeTeam !== null ? detailMatch.score.fullTime.homeTeam+' - '+detailMatch.score.fullTime.awayTeam : ' - '} </h4>
-                  <h4 class="col-12 white-text center-align">Extra-time     : ${detailMatch.score.extraTime.homeTeam !== null ? detailMatch.score.extraTime.homeTeam+' - '+detailMatch.score.extraTime.awayTeam : ' Tidak Ada '} </h4>
-                  <h4 class="col-12 white-text center-align">Penalties      : ${detailMatch.score.penalties.homeTeam !== null ? detailMatch.score.penalties.homeTeam+' - '+detailMatch.score.penalties.awayTeam : ' Tidak Ada '} </h4>
-                  <div class="card-action">
-                    <a class="yellow-text" href="./index.html">Kembali</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-                `;
-            });
-            //document.getElementById("body-content").innerHTML = articleHTML;
-            // Kirim objek data hasil parsing json agar bisa disimpan ke indexed db
-          }
-        });
-    }
     fetch(base_url + "v2/competitions/2001/matches", {
       method: "GET",
       headers: {

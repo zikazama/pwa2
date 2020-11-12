@@ -1,39 +1,67 @@
-const CACHE_NAME = "MB-v1";
-const urlsToCache = [
-  "/",
-  "/nav.html",
-  "/index.html",
-  "/match.html",
-  "/pages/home.html",
-  "/pages/about.html",
-  "/pages/ketentuan.html",
-  "/pages/contact.html",
-  "/pages/saved.html",
-  "/css/materialize.min.css",
-  "/js/materialize.min.js",
-  "/js/jquery.js",
-  "/js/nav.js",
-  "/js/api.js",
-  "/js/db.js",
-  "/js/idb.js",
-  "/js/sw-register.js",
-  "/js/sw-match.js",
-  "/icon.png",
-  "/maskable_icon.png",
-  "/custom-icon.png",
-  "/manifest.json",
-  "/push.js",
-  "https://fonts.googleapis.com/icon?family=Material+Icons",
-  "https://fonts.gstatic.com/s/materialicons/v67/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2"
-];
+importScripts(
+  "https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js"
+);
 
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(function (cache) {
-      return cache.addAll(urlsToCache);
-    })
-  );
-});
+if (workbox) console.log(`Workbox berhasil dimuat`);
+else console.log(`Workbox gagal dimuat`);
+
+workbox.precaching.precacheAndRoute(
+  [
+    { url: "/", revision: "1" },
+    { url: "/index.html", revision: "1" },
+    { url: "/nav.html", revision: "1" },
+    { url: "/match.html", revision: "1" },
+    { url: "/css/materialize.min.css", revision: "1" },
+    { url: "/js/materialize.min.js", revision: "1" },
+    { url: "/js/jquery.js", revision: "1" },
+    { url: "/js/nav.js", revision: "1" },
+    { url: "/js/api.js", revision: "1" },
+    { url: "/js/db.js", revision: "1" },
+    { url: "/js/idb.js", revision: "1" },
+    { url: "/js/sw-register.js", revision: "1" },
+    { url: "/js/sw-match.js", revision: "1" },
+    { url: "/icon.png", revision: "1" },
+    { url: "/maskable_icon.png", revision: "1" },
+    { url: "/custom_icon.png", revision: "1" },
+    { url: "/manifest.json", revision: "1" },
+    { url: "/js/push.js", revision: "1" },
+  ],
+  {
+    ignoreUrlParametersMatching: [/.*/],
+  }
+);
+
+workbox.routing.registerRoute(
+  /^https:\/\/fonts\.googleapis\.com/,
+  workbox.strategies.staleWhileRevalidate({
+    cacheName: "google-fonts-stylesheets",
+  })
+);
+
+workbox.routing.registerRoute(
+  /^https:\/\/fonts\.gstatic\.com/,
+  workbox.strategies.cacheFirst({
+    cacheName: "google-fonts-webfonts",
+    plugins: [
+      new workbox.cacheableResponse.Plugin({
+        statuses: [0, 200],
+      }),
+      new workbox.expiration.Plugin({
+        maxAgeSeconds: 60 * 60 * 24 * 365,
+        maxEntries: 30,
+      }),
+    ],
+  })
+);
+
+workbox.routing.registerRoute(
+  new RegExp("/pages/"),
+  workbox.strategies.staleWhileRevalidate({
+    cacheName: "pages",
+  })
+);
+
+const CACHE_NAME = "pages";
 
 self.addEventListener("fetch", (event) => {
   var base_url = "https://api.football-data.org/";
